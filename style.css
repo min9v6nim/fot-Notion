@@ -1,197 +1,139 @@
 :root{
-  --bg: #fff6fa;
-  --card: rgba(255,255,255,.82);
-  --line: rgba(60,60,60,.16);
-
-  --pink: #ffe3ee;
+  --bg:#fff6fa;
+  --pink:#ffe3ee;
   --pink2:#ffd1e4;
-  --pink3:#ffb9d2;
-
-  --ink: #2b2b2b;
-  --muted: rgba(43,43,43,.55);
-
-  --holiday: #ff4f94;
+  --border:rgba(243,167,200,.8);
+  --ink:#2b2b2b;
+  --sun:#ff5fa3;
+  --sat:#6aa6ff;
 }
 
 *{ box-sizing:border-box; }
 
-html, body{
-  width:100%;
-  height:auto;
-}
-
 body{
   margin:0;
   padding:0;
-  background: transparent;  /* 노션 embed에서 여백/배경 최소화 */
-  font-family:'NanumSquare', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  background:transparent;
+  font-family:'NanumSquare',sans-serif;
 }
 
 .widget{
-  width:100%;
-  max-width: 340px;           /* 노션 위젯 느낌 */
-  background: var(--bg);
-  border: 1px solid rgba(243,167,200,.7);
-  border-radius: 18px;
+  max-width:340px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:18px;
   overflow:hidden;
 }
 
 /* ===== Header ===== */
 .header{
   position:relative;
-  padding: 10px 10px 8px;
-  background: linear-gradient(180deg, rgba(255,227,238,.65), rgba(255,246,250,0));
+  padding:10px;
+  background:linear-gradient(180deg,#ffe3ee,#fff6fa);
 }
 
 .headerBg{
   position:absolute;
-  left:10px;
-  right:10px;
-  top:8px;
-  height:56px;               /* "작게" 헤더에만 */
-  border-radius: 14px;
+  inset:8px;
+  height:56px;
+  border-radius:14px;
   overflow:hidden;
-  opacity: .95;
   pointer-events:none;
-  border: 1px solid rgba(60,60,60,.08);
 }
 
 .headerBg img{
   width:100%;
   height:100%;
-  object-fit: cover;
-  image-rendering: pixelated;
-  transform: scale(1.02);
+  object-fit:cover;
+  image-rendering:pixelated;
 }
 
 .headerRow{
   position:relative;
+  z-index:1;
   display:flex;
   align-items:center;
   gap:10px;
-  z-index:1;
-  padding: 6px 4px 4px;
 }
 
 .month{
   flex:1;
-  color: var(--ink);
-  font-family: "Press Start 2P", 'NanumSquare', sans-serif; /* 픽셀 느낌 */
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-shadow: 0 1px 0 rgba(255,255,255,.55);
+  font-family:'Press Start 2P',sans-serif;
+  font-size:14px;
 }
 
-/* ===== Buttons (pixel pastel) ===== */
 .nav{
   display:flex;
   gap:6px;
 }
 
-.btn{
-  font-family: 'NanumSquare', sans-serif;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color: transparent;
-}
-
 .pixelBtn{
-  background: var(--pink);
-  border: 1px solid rgba(243,167,200,.85);
-  border-radius: 10px;
-  padding: 6px 8px;
-  font-size: 12px;
-  line-height: 1;
-  color: var(--ink);
-  box-shadow:
-    0 2px 0 rgba(243,167,200,.55),
-    inset 0 1px 0 rgba(255,255,255,.75);
-}
-
-.pixelBtn:active{
-  transform: translateY(1px);
-  box-shadow:
-    0 1px 0 rgba(243,167,200,.55),
-    inset 0 1px 0 rgba(255,255,255,.75);
+  background:var(--pink);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:6px 8px;
+  font-size:12px;
+  cursor:pointer;
 }
 
 .todayBtn{
-  padding: 6px 10px;
-  background: var(--pink2);
+  background:var(--pink2);
 }
 
 .week{
-  position:relative;
-  z-index:1;
   display:grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap:6px;
-  padding: 4px 4px 0;
-  font-size: 12px;
-  color: var(--muted);
+  grid-template-columns:repeat(7,1fr);
+  margin-top:6px;
+  font-size:12px;
   text-align:center;
 }
 
-.week .sun{ color:#ff5fa3; font-weight:700; }
-.week .sat{ color:#6aa6ff; font-weight:700; }
+.week .sun{ color:var(--sun); font-weight:700; }
+.week .sat{ color:var(--sat); font-weight:700; }
 
-/* ===== Grid ===== */
+/* ===== Calendar ===== */
 main{
-  padding: 8px 10px 10px;
+  padding:8px 10px 12px;
 }
 
 .grid{
   display:grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
 }
 
 .day{
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid rgba(60,60,60,.10);
-  background: rgba(255,227,238,.72);
-  padding: 6px 6px;
-  position:relative;
-  text-align:left;
-  overflow:hidden;
+  height:40px;
+  border-radius:10px;
+  border:1px solid rgba(60,60,60,.1);
+  background:#ffe3ee;
+  padding:6px;
 }
 
-.day:hover{
-  border-color: rgba(243,167,200,.85);
-}
+.day.muted{ opacity:.35; }
 
 .day .num{
-  font-weight: 800;
-  font-size: 12px;
-  color: var(--ink);
+  font-size:12px;
+  font-weight:800;
 }
 
-.day .label{
-  margin-top: 2px;
-  font-size: 10px;
-  color: var(--holiday);
-  font-weight: 800;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.day.sun .num{ color:var(--sun); }
+.day.sat .num{ color:var(--sat); }
+
+/* 공휴일 */
+.day.holiday .num{
+  color:var(--sun);   /* 일요일과 동일한 분홍 */
 }
 
-.day.muted{
-  opacity:.35;
+.holidayDot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--sun);
+  margin-top:4px;
 }
 
+/* 오늘 */
 .day.today{
-  outline: 2px solid rgba(243,167,200,.95);
-  background: rgba(255,209,228,.86);
-}
-
-.day.sun .num{ color:#ff5fa3; }
-.day.sat .num{ color:#6aa6ff; }
-
-.hint{
-  margin-top: 8px;
-  font-size: 11px;
-  color: rgba(43,43,43,.55);
-  text-align: right;
+  outline:2px solid var(--border);
 }
