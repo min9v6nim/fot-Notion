@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel Notion Calendar</title>
+  <title>Pixel Calendar</title>
 
-  <!-- NanumSquare (기본 폰트) -->
+  <!-- NanumSquare -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css">
 
-  <!-- Pixel font for month title -->
+  <!-- Pixel font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -17,9 +17,10 @@
 </head>
 
 <body>
-  <div class="widget" role="application" aria-label="calendar widget">
+  <div class="widget">
     <header class="header">
-      <div class="headerBg" aria-hidden="true">
+      <!-- 픽셀 구름 헤더 -->
+      <div class="headerBg">
         <img src="cloud.png" alt="">
       </div>
 
@@ -27,13 +28,13 @@
         <div class="month" id="monthTitle"></div>
 
         <div class="nav">
-          <button class="btn pixelBtn" id="prevBtn" aria-label="previous month">◀</button>
-          <button class="btn pixelBtn todayBtn" id="todayBtn">Today</button>
-          <button class="btn pixelBtn" id="nextBtn" aria-label="next month">▶</button>
+          <button class="pixelBtn" id="prevBtn">◀</button>
+          <button class="pixelBtn todayBtn" id="todayBtn">Today</button>
+          <button class="pixelBtn" id="nextBtn">▶</button>
         </div>
       </div>
 
-      <div class="week" aria-label="weekday labels">
+      <div class="week">
         <span class="sun">일</span>
         <span>월</span>
         <span>화</span>
@@ -45,8 +46,7 @@
     </header>
 
     <main>
-      <div id="grid" class="grid" aria-label="calendar grid"></div>
-      <div class="hint">날짜 클릭 → Notion 캘린더로 이동</div>
+      <div id="grid" class="grid"></div>
     </main>
   </div>
 
