@@ -1,1 +1,83 @@
+body{
+  margin:0;
+  background:transparent;
+  font-family:'NanumSquare',sans-serif;
+}
+
+/* ===== Widget ===== */
+.mp3Widget{
+  width:360px;
+  padding:10px 12px;
+  background:linear-gradient(135deg,#f4e9ff,#ffe6f2,#e6f0ff,#fff4d9);
+  border:2px solid rgba(120,90,160,.4);
+  border-radius:16px;
+  box-shadow:0 6px 12px rgba(160,120,200,.25);
+}
+
+/* ===== Top ===== */
+.topBar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:6px;
+}
+
+.led{
+  width:8px;
+  height:8px;
+  background:#ff7ac8;
+  border-radius:50%;
+  box-shadow:0 0 6px #ff7ac8;
+}
+
+.title{
+  font-family:'Press Start 2P',sans-serif;
+  font-size:10px;
+  color:#4b3b6b;
+}
+
+/* ===== Screen ===== */
+.screen{
+  position:relative;
+  height:24px;
+  background:#fff;
+  border-radius:10px;
+  border:1px solid rgba(100,80,140,.3);
+  padding:4px 8px;
+  overflow:hidden;
+}
+
+#todoText{
+  position:absolute;
+  left:8px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:13px;
+  font-weight:700;
+  color:#5a4a78;
+  white-space:nowrap;
+  transition:opacity .4s ease, transform .4s ease;
+}
+
+/* ===== Controls ===== */
+.controls{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:8px;
+}
+
+.btn{
+  font-family:'Press Start 2P',sans-serif;
+  font-size:10px;
+  padding:4px 6px;
+  background:#ffe3f0;
+  border-radius:8px;
+  border:1px solid rgba(160,120,200,.4);
+  color:#7a5aa6;
+}
+
+.btn.play{
+  background:#e6edff;
+}
 
