@@ -3,7 +3,6 @@ const title = document.getElementById("monthTitle");
 
 let view = new Date();
 
-// 🇰🇷 한국 공휴일
 const holidays = {
   "2025-01-01":"신정",
   "2025-03-01":"삼일절",
@@ -26,10 +25,8 @@ function render(){
 
   const first = new Date(y,m,1);
   const last = new Date(y,m+1,0);
-
   const start = first.getDay();
   const days = last.getDate();
-
   const prevLast = new Date(y,m,0).getDate();
 
   for(let i=0;i<start;i++){
@@ -55,7 +52,6 @@ function makeCell(y,m,d,muted){
   const n = document.createElement("div");
   n.className = "num";
   n.textContent = d;
-
   cell.appendChild(n);
 
   if(holidays[iso]){
@@ -70,10 +66,10 @@ function makeCell(y,m,d,muted){
     cell.classList.add("today");
   }
 
-  // 📌 날짜 클릭 → 노션 페이지
+  // 🔗 날짜 클릭 → 노션 일정 페이지
   cell.onclick = () => {
-    const notionURL = "https://www.notion.so/여기에-네-노션-일정페이지";
-    window.open(notionURL,"_blank");
+    const notionURL = "https://www.notion.so/여기에-네-노션-일정-DB";
+    window.open(notionURL, "_blank");
   };
 
   return cell;
