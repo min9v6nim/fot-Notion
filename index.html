@@ -3,34 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel Pastel Calendar</title>
+
+  <title>Pixel Notion Calendar</title>
+
+  <!-- NanumSquare -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css">
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="wrap">
     <header class="top">
-      <div class="logo" aria-label="logo">🐶</div>
+      <div class="logo">🐶</div>
+
       <div class="title">
-        <h1 id="monthTitle">2025-12</h1>
-        <p>Notion Embed Calendar</p>
+        <h1 id="monthTitle"></h1>
       </div>
+
       <div class="nav">
-        <button id="prevBtn" type="button">◀</button>
-        <button id="todayBtn" type="button">Today</button>
-        <button id="nextBtn" type="button">▶</button>
+        <button id="prevBtn">◀</button>
+        <button id="todayBtn">Today</button>
+        <button id="nextBtn">▶</button>
       </div>
     </header>
 
     <section class="card">
       <div class="weekhead">
-        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        <div>일SUN</div>
+        <div>월MON</div>
+        <div>화TUE</div>
+        <div>수WED</div>
+        <div>목THU</div>
+        <div>금FRI</div>
+        <div>토SAT</div>
       </div>
-      <div id="grid" class="grid" aria-label="calendar-grid"></div>
-    </section>
 
-    <footer class="hint">
-      날짜 클릭 → 아래 app.js에서 링크 동작을 설정할 수 있어요.
-    </footer>
+      <div id="grid" class="grid"></div>
+    </section>
   </div>
 
   <script src="app.js"></script>
