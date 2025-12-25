@@ -1,17 +1,17 @@
 :root{
-  --pink:#ffd6e8;
-  --blue:#cfe8ff;
-  --purple:#e6dcff;
-  --ink:#2b2b2b;
+  --pink:#ffe3ee;
+  --pink-today:#ffd1e4;
+  --bg:#fff6fa;
   --line:rgba(60,60,60,.15);
+  --ink:#2b2b2b;
 }
 
-*{box-sizing:border-box}
+*{ box-sizing:border-box }
 
 body{
   margin:0;
   font-family:'NanumSquare', sans-serif;
-  background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
+  background:var(--bg);
 }
 
 .wrap{
@@ -30,11 +30,15 @@ body{
   width:40px;
   height:40px;
   border-radius:12px;
-  background:rgba(255,255,255,.6);
+  background:rgba(255,255,255,.7);
   display:grid;
   place-items:center;
-  font-size:20px;
-  image-rendering:pixelated;
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  image-rendering: pixelated;
 }
 
 .title{
@@ -44,6 +48,7 @@ body{
 .title h1{
   margin:0;
   font-size:16px;
+  color:var(--ink);
 }
 
 .nav{
@@ -53,14 +58,14 @@ body{
 
 button{
   border:1px solid var(--line);
-  background:rgba(255,255,255,.6);
+  background:rgba(255,255,255,.7);
   border-radius:10px;
   padding:6px 8px;
   cursor:pointer;
 }
 
 .card{
-  background:rgba(255,255,255,.65);
+  background:rgba(255,255,255,.8);
   border:1px solid var(--line);
   border-radius:18px;
   padding:10px;
@@ -85,7 +90,7 @@ button{
   height:52px;
   border-radius:14px;
   border:1px solid var(--line);
-  background:rgba(255,255,255,.7);
+  background:var(--pink);
   padding:6px;
   font-size:11px;
   cursor:pointer;
@@ -97,7 +102,8 @@ button{
 }
 
 .day.today{
-  outline:2px solid #9dbbff;
+  background:var(--pink-today);
+  outline:2px solid #f3a7c8;
 }
 
 .day .num{
