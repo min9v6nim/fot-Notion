@@ -25,66 +25,43 @@ function render(){
 
   const first = new Date(y,m,1);
   const last = new Date(y,m+1,0);
-  const start = first.getDay();
-  const days = last.getDate();
-  const prevLast = new Date(y,m,0).getDate();
 
-  for(let i=0;i<start;i++){
-    grid.appendChild(makeCell(y,m-1,prevLast-start+i+1,true));
+  for(let d=1; d<=last.getDate(); d++){
+    const date = new Date(y,m,d);
+    const iso = `${y}-${pad(m+1)}-${pad(d)}`;
+
+    const cell = document.createElement("div");
+    cell.className = "day";
+    cell.innerHTML = `<div>${d}</div>`;
+
+    if(holidays[iso]){
+      cell.innerHTML += `<div class="holiday">${holidays[iso]}</div>`;
+    }
+
+    const today = new Date();
+    if(date.toDateString() === today.toDateString()){
+      cell.classList.add("today");
+    }
+
+    cell.onclick = () => {
+      window.open(
+        "https://www.notion.so/여기에-네-노션-페이지",
+        "_blank"
+      );
+    };
+
+    grid.appendChild(cell);
   }
-
-  for(let d=1; d<=days; d++){
-    grid.appendChild(makeCell(y,m,d,false));
-  }
-
-  while(grid.children.length < 42){
-    grid.appendChild(makeCell(y,m+1,grid.children.length,false,true));
-  }
-}
-
-function makeCell(y,m,d,muted){
-  const date = new Date(y,m,d);
-  const iso = `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
-
-  const cell = document.createElement("div");
-  cell.className = "day" + (muted ? " muted" : "");
-
-  const n = document.createElement("div");
-  n.className = "num";
-  n.textContent = d;
-  cell.appendChild(n);
-
-  if(holidays[iso]){
-    const h = document.createElement("div");
-    h.className = "holiday";
-    h.textContent = holidays[iso];
-    cell.appendChild(h);
-  }
-
-  const today = new Date();
-  if(date.toDateString() === today.toDateString()){
-    cell.classList.add("today");
-  }
-
-  // 🔗 날짜 클릭 → 노션 일정 페이지
-  cell.onclick = () => {
-    const notionURL = "https://www.notion.so/여기에-네-노션-일정-DB";
-    window.open(notionURL, "_blank");
-  };
-
-  return cell;
 }
 
 document.getElementById("prevBtn").onclick = () => {
   view = new Date(view.getFullYear(), view.getMonth()-1, 1);
   render();
 };
-
 document.getElementById("nextBtn").onclick = () => {
   view = new Date(view.getFullYear(), view.getMonth()+1, 1);
   render();
 };
-
 document.getElementById("todayBtn").onclick = () => {
   view = new Date();
   render();
