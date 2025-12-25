@@ -1,0 +1,153 @@
+:root{
+  --bg1:#ffd6e8;
+  --bg2:#cfe8ff;
+  --bg3:#e6dcff;
+  --ink:#2b2b2b;
+  --card:rgba(255,255,255,0.62);
+  --stroke:rgba(60,60,60,0.14);
+  --shadow:0 20px 60px rgba(20,20,40,0.18);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(900px 380px at 20% 15%, rgba(255,255,255,0.55), transparent 60%),
+    radial-gradient(700px 340px at 85% 30%, rgba(255,255,255,0.45), transparent 60%),
+    linear-gradient(135deg, var(--bg1), var(--bg3), var(--bg2));
+  overflow-x:hidden;
+}
+
+/* 픽셀 구름 느낌 배경 */
+body:before{
+  content:"";
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(transparent 92%, rgba(255,255,255,0.18) 92%),
+    linear-gradient(90deg, transparent 92%, rgba(255,255,255,0.18) 92%);
+  background-size: 18px 18px;
+  mix-blend-mode: soft-light;
+  pointer-events:none;
+}
+
+.wrap{
+  max-width:980px;
+  margin:0 auto;
+  padding:28px 18px 40px;
+}
+
+.top{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.logo{
+  width:52px; height:52px;
+  display:grid; place-items:center;
+  border-radius:14px;
+  background:rgba(255,255,255,0.6);
+  border:1px solid var(--stroke);
+  box-shadow: 0 10px 25px rgba(40,40,70,0.12);
+  font-size:22px;
+}
+
+.title{flex:1}
+.title h1{
+  margin:0;
+  font-size:22px;
+  letter-spacing:0.2px;
+}
+.title p{margin:2px 0 0; opacity:0.7; font-size:13px}
+
+.nav{display:flex; gap:8px}
+button{
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,0.6);
+  padding:10px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  box-shadow: 0 10px 25px rgba(40,40,70,0.10);
+}
+button:active{transform:translateY(1px)}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(10px);
+  padding:14px;
+}
+
+.weekhead{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:10px;
+  padding:6px 4px 10px;
+  font-size:12px;
+  opacity:0.75;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:10px;
+}
+
+.day{
+  position:relative;
+  height:92px;
+  border-radius:18px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,0.56);
+  padding:10px;
+  cursor:pointer;
+  overflow:hidden;
+}
+
+.day:hover{
+  outline:2px solid rgba(140,120,255,0.35);
+}
+
+.day .n{
+  font-weight:700;
+  font-size:13px;
+}
+
+.day.muted{
+  opacity:0.45;
+}
+
+.day.today{
+  background:rgba(255,255,255,0.78);
+  outline:2px solid rgba(90,160,255,0.35);
+}
+
+/* 픽셀 스파클 */
+.day:after{
+  content:"";
+  position:absolute; inset:-20%;
+  background:
+    radial-gradient(circle at 25% 30%, rgba(255,255,255,0.65) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 55%, rgba(255,255,255,0.55) 0 2px, transparent 3px),
+    radial-gradient(circle at 55% 20%, rgba(255,255,255,0.45) 0 1.5px, transparent 3px);
+  transform: rotate(8deg);
+  pointer-events:none;
+}
+
+.hint{
+  margin-top:12px;
+  font-size:12px;
+  opacity:0.65;
+}
+
+@media (max-width:640px){
+  .day{height:74px; border-radius:16px;}
+  .title h1{font-size:18px;}
+}
