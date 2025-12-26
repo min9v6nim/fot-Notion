@@ -1,13 +1,13 @@
 // ===== Notion API 설정 =====
 const NOTION_TOKEN = "ntn_K91404737828xV5w5clbsiiyeP2aXgLprHjEhLFnDwR07Y";
-const DATABASE_ID = "2d5220d08fb6802c864cdb1846ee9411?v=2d5220d08fb68048a619000cd5a0b4f2";
+const DATABASE_ID = "2d5220d08fb6802c864cdb1846ee9411";
 
 const grid = document.getElementById("grid");
 const title = document.getElementById("monthTitle");
 
 let view = new Date();
 
-/* 2026 공휴일 + 근로자의날 */
+/* 2026 공휴일 */
 const holidays = {
   "2026-01-01": true,
   "2026-02-16": true,
@@ -17,8 +17,6 @@ const holidays = {
   "2026-03-02": true,
   "2026-05-01": true,
   "2026-05-05": true,
-  "2026-05-24": true,
-  "2026-05-25": true,
   "2026-06-03": true,
   "2026-06-06": true,
   "2026-08-15": true,
@@ -35,6 +33,44 @@ const holidays = {
 const pad = n => String(n).padStart(2,"0");
 const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 
+// ===== Notion 데이터 =====
+let notionEventsByDate = {};
+
+// ===== Notion 캘린더 불러오기 =====
+async function fetchNotionEvents() {
+  const res = await fetch(
+    `https://api.notion.com/v1/databases/${DATABASE_ID}/query`,
+    {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${NOTION_TOKEN}`,
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+  const data = await res.json();
+
+  notionEventsByDate = {};
+
+  data.results.forEach(page => {
+    const title =
+      page.properties.이름?.title?.[0]?.plain_text || "";
+
+    const date =
+      page.properties.날짜?.date?.start;
+
+    if (!date) return;
+
+    if (!notionEventsByDate[date]) {
+      notionEventsByDate[date] = [];
+    }
+    notionEventsByDate[date].push(title);
+  });
+}
+
+// ===== 캘린더 렌더 =====
 function render(){
   const y = view.getFullYear();
   const m = view.getMonth();
@@ -78,10 +114,21 @@ function render(){
     num.textContent=d.getDate();
     cell.appendChild(num);
 
-    if(holidays[iso(d)]){
+    const key = iso(d);
+
+    // 공휴일
+    if(holidays[key]){
       cell.classList.add("holiday");
       const dot=document.createElement("div");
       dot.className="holidayDot";
+      cell.appendChild(dot);
+    }
+
+    // 노션 일정
+    if(notionEventsByDate[key]){
+      const dot=document.createElement("div");
+      dot.className="eventDot";
+      dot.title = notionEventsByDate[key].join("\n");
       cell.appendChild(dot);
     }
 
@@ -93,36 +140,25 @@ function render(){
   });
 }
 
-document.getElementById("prevBtn").onclick=()=>{
+// ===== 버튼 =====
+document.getElementById("prevBtn").onclick=async ()=>{
   view=new Date(view.getFullYear(),view.getMonth()-1,1);
+  await fetchNotionEvents();
   render();
 };
-document.getElementById("nextBtn").onclick=()=>{
+document.getElementById("nextBtn").onclick=async ()=>{
   view=new Date(view.getFullYear(),view.getMonth()+1,1);
+  await fetchNotionEvents();
   render();
 };
-document.getElementById("todayBtn").onclick=()=>{
+document.getElementById("todayBtn").onclick=async ()=>{
   view=new Date();
+  await fetchNotionEvents();
   render();
 };
 
-render();
-
-// ===== Notion 캘린더 불러오기 =====
-async function notion캘린더불러오기() {
-  const 응답 = await fetch(
-    `https://api.notion.com/v1/databases/${DATABASE_ID}/query`,
-    {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${NOTION_TOKEN}`,
-        "Notion-Version": "2022-06-28",
-        "Content-Type": "application/json"
-      }
-    }
-  );
-
-  const 데이터 = await 응답.json();
-  return 데이터.results;
-}
-
+// ===== 초기 실행 =====
+(async function init(){
+  await fetchNotionEvents();
+  render();
+})();
