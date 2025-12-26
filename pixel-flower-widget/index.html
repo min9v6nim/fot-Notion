@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Pixel Flower Snowglobe</title>
+<meta charset="UTF-8">
+<title>Pixel Snowglobe</title>
 <style>
   body {
+    margin: 0;
     background: transparent;
     display: flex;
     justify-content: center;
@@ -19,105 +20,45 @@
 </head>
 <body>
 
-<canvas id="scene" width="320" height="320"></canvas>
+<canvas id="c" width="360" height="420"></canvas>
 
 <script>
-const canvas = document.getElementById("scene");
+const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 
-const SIZE = 320;
-const INNER = 260;
-const PIXEL = 4;
+const W = canvas.width;
+const H = canvas.height;
 
-// pastel palette (첨부 이미지 기반)
-const COLORS = {
-  frame: "#e9c6e3",
-  frameShadow: "#cfa7c8",
-  sky: "#dff1ff",
-  petals: ["#ffd1dc", "#ffe4b5", "#e0d4ff", "#c1f0e8", "#fff1c1"]
+const globe = {
+  x: W / 2,
+  y: 170,
+  r: 130
 };
 
-// pixel flower definition (5 petals)
-const FLOWER = [
-  [0,1,0],
-  [1,1,1],
-  [0,1,0]
-];
+const PIXEL = 3;
 
-class Petal {
+const COLORS = {
+  glass: "#ffffff22",
+  sky: "#e6f4ff",
+  snow: "#ffffff",
+  glow: "#fff3d4",
+  baseTop: "#f2cce0",
+  baseSide: "#d6a8c4",
+  text: "#ffffff"
+};
+
+class Snow {
   constructor() {
-    this.x = Math.floor(Math.random() * (INNER / PIXEL)) * PIXEL;
-    this.y = -20;
-    this.speed = 0.3 + Math.random() * 0.4;
-    this.color = COLORS.petals[Math.floor(Math.random() * COLORS.petals.length)];
+    this.reset();
   }
-
-  draw() {
-    ctx.fillStyle = this.color;
-    FLOWER.forEach((row, y) => {
-      row.forEach((cell, x) => {
-        if (cell) {
-          ctx.fillRect(
-            this.x + x * PIXEL,
-            this.y + y * PIXEL,
-            PIXEL,
-            PIXEL
-          );
-        }
-      });
-    });
+  reset() {
+    const a = Math.random() * Math.PI * 2;
+    const r = Math.random() * globe.r;
+    this.x = globe.x + Math.cos(a) * r;
+    this.y = globe.y + Math.sin(a) * r;
+    this.size = 3 + Math.random() * 3;
+    this.speed = 0.15 + Math.random() * 0.25;
   }
-
   update() {
     this.y += this.speed;
-  }
-}
-
-const petals = Array.from({ length: 15 }, () => new Petal());
-
-function drawPixelFrame() {
-  const p = PIXEL;
-  ctx.fillStyle = COLORS.frame;
-
-  for (let i = 0; i < SIZE; i += p * 2) {
-    ctx.fillRect(i, 0, p, p);
-    ctx.fillRect(i, SIZE - p, p, p);
-    ctx.fillRect(0, i, p, p);
-    ctx.fillRect(SIZE - p, i, p, p);
-  }
-}
-
-function draw() {
-  ctx.clearRect(0, 0, SIZE, SIZE);
-
-  // inner sky
-  ctx.fillStyle = COLORS.sky;
-  ctx.fillRect(
-    (SIZE - INNER) / 2,
-    (SIZE - INNER) / 2,
-    INNER,
-    INNER
-  );
-
-  ctx.save();
-  ctx.translate((SIZE - INNER) / 2, (SIZE - INNER) / 2);
-
-  petals.forEach(p => {
-    p.update();
-    p.draw();
-    if (p.y > INNER) {
-      Object.assign(p, new Petal());
-    }
-  });
-
-  ctx.restore();
-
-  drawPixelFrame();
-  requestAnimationFrame(draw);
-}
-
-draw();
-</script>
-
-</body>
-</html>
+    if (this.y > globe.y + globe.r) this.reset();
