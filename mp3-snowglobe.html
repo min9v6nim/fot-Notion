@@ -1,216 +1,239 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MP3 Snowglobe Widget</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Notion Snowglobe</title>
 
-  <!-- Pixel Font (링크 예제와 같은 계열) -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
 
-  <style>
-    :root{
-      /* 파스텔/픽셀 톤 */
-      --bg1:#f7d7ee;
-      --bg2:#d8eaff;
-      --frame1:#f3c8de;
-      --frame2:#d8a6c4;
-      --screen:#dff1ff;
-      --ink:#2b2b2b;
-      --white:#ffffff;
-      --glow:#fff2c9;
-      --glow2:#ffd6ee;
-    }
+<style>
+:root{
+  --grad1:#ffd6e8;
+  --grad2:#fff2c9;
+  --grad3:#dff1ff;
+  --grad4:#e6ddff;
+  --ink:#2b2b2b;
+}
 
-    html,body{
-      height:100%;
-      margin:0;
-      background:transparent;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+html,body{
+  margin:0;
+  height:100%;
+  background:transparent;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-    /* 전체 MP3 위젯 */
-    .mp3Widget{
-      width: 360px;
-      border-radius: 16px;
-      padding: 14px;
-      background: linear-gradient(180deg, var(--bg1), var(--bg2));
-      box-shadow:
-        0 18px 40px rgba(0,0,0,.18),
-        inset 0 0 0 4px rgba(255,255,255,.35);
-      position: relative;
-      font-family: "Press Start 2P", system-ui, sans-serif;
-      color: var(--ink);
-      user-select:none;
-    }
+.mp3Widget{
+  width:360px;
+  padding:14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--grad1),var(--grad2),var(--grad3),var(--grad4));
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.12),
+    inset 0 0 0 4px rgba(255,255,255,.45);
+  font-family:"Press Start 2P", system-ui, sans-serif;
+  color:var(--ink);
+}
 
-    /* 픽셀 느낌 외곽선 */
-    .pixelFrame{
-      background: linear-gradient(180deg, var(--frame1), var(--frame2));
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow:
-        inset 0 0 0 4px rgba(255,255,255,.35),
-        inset 0 -6px 0 rgba(0,0,0,.06);
-      position: relative;
-    }
+.pixelFrame{
+  border-radius:14px;
+  padding:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.25));
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,.6),
+    inset 0 -6px 0 rgba(0,0,0,.04);
+}
 
-    /* 상단 바 */
-    .topBar{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding: 6px 8px 10px 8px;
-    }
+.topBar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 6px 10px;
+}
 
-    .led{
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
-      background: #a8ffcf;
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,.4),
-        0 0 16px rgba(168,255,207,.85);
-    }
+.led{
+  width:9px;height:9px;
+  background:#bfffe2;
+  border-radius:3px;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.4),
+    0 0 14px rgba(191,255,226,.9);
+}
 
-    .title{
-      font-size: 12px;
-      letter-spacing: 1px;
-      opacity: .9;
-    }
+.title{
+  font-size:9px;
+  letter-spacing:1px;
+  opacity:.75;
+}
 
-    /* 스크린 */
-    .screen{
-      background: var(--screen);
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow:
-        inset 0 0 0 4px rgba(255,255,255,.55),
-        inset 0 -8px 0 rgba(0,0,0,.04);
-    }
+.screen{
+  background:#eaf5ff;
+  border-radius:12px;
+  padding:10px;
+  box-shadow:
+    inset 0 0 0 4px rgba(255,255,255,.55),
+    inset 0 -8px 0 rgba(0,0,0,.04);
+}
 
-    canvas{
-      display:block;
-      width: 100%;
-      height: auto;
-      image-rendering: pixelated;
-      border-radius: 8px;
-    }
+canvas{
+  width:100%;
+  display:block;
+  image-rendering:pixelated;
+  border-radius:8px;
+}
 
-    /* 하단 컨트롤 영역 */
-    .controls{
-      display:flex;
-      justify-content: space-between;
-      align-items:center;
-      padding: 12px 8px 4px 8px;
-      gap: 10px;
-    }
+.controls{
+  display:flex;
+  gap:8px;
+  padding:12px 6px 4px;
+}
 
-    .btn{
-      flex: 1;
-      text-align:center;
-      padding: 10px 8px;
-      background: rgba(255,255,255,.35);
-      border-radius: 10px;
-      box-shadow:
-        inset 0 0 0 3px rgba(255,255,255,.45),
-        inset 0 -6px 0 rgba(0,0,0,.06);
-      font-size: 12px;
-      letter-spacing: 1px;
-    }
+.btn{
+  flex:1;
+  text-align:center;
+  padding:8px 0;
+  font-size:10px;
+  background:rgba(255,255,255,.35);
+  border-radius:10px;
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,.45),
+    inset 0 -5px 0 rgba(0,0,0,.05);
+}
 
-    .btn.play{
-      flex: 1.2;
-      background: rgba(255,255,255,.50);
-    }
+.btn.play{
+  background:rgba(255,255,255,.55);
+}
 
-    /* 하단 MP3 베이스 텍스트 (요청: My Notion Home 픽셀 문구) */
-    .brand{
-      margin-top: 10px;
-      padding: 10px 8px;
-      background: rgba(255,255,255,.25);
-      border-radius: 12px;
-      text-align:center;
-      box-shadow:
-        inset 0 0 0 3px rgba(255,255,255,.35),
-        inset 0 -6px 0 rgba(0,0,0,.05);
-      font-size: 12px;
-      letter-spacing: 2px;
-      color: rgba(43,43,43,.85);
-    }
+.brand{
+  margin-top:10px;
+  padding:10px 6px;
+  text-align:center;
+  font-size:10px;
+  letter-spacing:1.5px;
+  background:rgba(255,255,255,.3);
+  border-radius:12px;
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,.35),
+    inset 0 -6px 0 rgba(0,0,0,.05);
+  opacity:.85;
+}
 
-    /* Notion embed 시 크기 대응 */
-    @media (max-width: 420px){
-      .mp3Widget{ width: 92vw; }
-    }
-  </style>
+@media (max-width:420px){
+  .mp3Widget{ width:92vw; }
+}
+</style>
 </head>
 
 <body>
-  <div class="mp3Widget">
-    <div class="pixelFrame">
+<div class="mp3Widget">
+  <div class="pixelFrame">
 
-      <div class="topBar">
-        <div class="led"></div>
-        <div class="title">SNOWGLOBE</div>
-      </div>
-
-      <div class="screen">
-        <canvas id="scene" width="320" height="320"></canvas>
-      </div>
-
-      <div class="controls">
-        <div class="btn">◁◁</div>
-        <div class="btn play">▶</div>
-        <div class="btn">▷▷</div>
-      </div>
-
-      <div class="brand">MY NOTION HOME</div>
-
+    <div class="topBar">
+      <div class="led"></div>
+      <div class="title">SNOWGLOBE</div>
     </div>
+
+    <div class="screen">
+      <canvas id="scene" width="320" height="320"></canvas>
+    </div>
+
+    <div class="controls">
+      <div class="btn">◁◁</div>
+      <div class="btn play">▶</div>
+      <div class="btn">▷▷</div>
+    </div>
+
+    <div class="brand">MY NOTION HOME</div>
   </div>
+</div>
 
 <script>
-  const canvas = document.getElementById("scene");
-  const ctx = canvas.getContext("2d");
+const canvas = document.getElementById("scene");
+const ctx = canvas.getContext("2d");
+const W = canvas.width;
+const H = canvas.height;
+const PX = 2;
 
-  const W = canvas.width;
-  const H = canvas.height;
+const globe = { x:W/2, y:150, r:118 };
 
-  // 픽셀 스케일 (값 올리면 더 레트로/블록감)
-  const PX = 2;
+const bgImg = new Image();
+bgImg.src = "./cloud.png";
 
-  // 스노우볼(원) 위치/반지름
-  const globe = { x: W/2, y: 150, r: 118 };
+class Snow{
+  constructor(){ this.reset(true); }
+  reset(init){
+    const a = Math.random()*Math.PI*2;
+    const rr = Math.sqrt(Math.random())*(globe.r-6);
+    this.x = globe.x + Math.cos(a)*rr;
+    this.y = init ? globe.y + Math.sin(a)*rr : globe.y - globe.r - 10;
+    this.speed = 0.18 + Math.random()*0.22;
+    this.drift = (Math.random()-0.5)*0.12;
+    this.size = 3 + Math.random()*4;
+    this.alpha = 0.75 + Math.random()*0.25;
+    this.phase = Math.random()*Math.PI*2;
+  }
+  update(){
+    this.phase += 0.01;
+    this.x += this.drift + Math.sin(this.phase)*0.05;
+    this.y += this.speed;
+    if(this.y > globe.y + globe.r + 10) this.reset(false);
+  }
+  draw(){
+    ctx.globalAlpha = this.alpha;
+    const X = Math.floor(this.x/PX)*PX;
+    const Y = Math.floor(this.y/PX)*PX;
+    ctx.fillStyle="#fff";
+    for(let i=-this.size;i<=this.size;i++){
+      ctx.fillRect(X+i*PX,Y,PX,PX);
+      ctx.fillRect(X,Y+i*PX,PX,PX);
+    }
+    ctx.globalAlpha=1;
+  }
+}
 
-  // 파스텔/조명 톤
-  const C = {
-    skyTop:  "#f7d7ee",
-    skyMid:  "#e7dfff",
-    skyBot:  "#d8eaff",
-    glass:   "rgba(255,255,255,0.22)",
-    rim:     "rgba(255,255,255,0.38)",
-    glow1:   "rgba(255,242,201,0.75)",
-    glow2:   "rgba(255,214,238,0.45)",
-    snow:    "rgba(255,255,255,0.95)",
-    snowDim: "rgba(255,255,255,0.70)"
-  };
+const flakes = Array.from({length:32},()=>new Snow());
 
-  // 큰 픽셀 눈결정(여러 형태)
-  function drawCrystal(x,y,size,type,alpha=1){
-    const s = Math.max(2, Math.floor(size));
-    ctx.globalAlpha = alpha;
+function drawBackground(){
+  if(bgImg.complete){
+    ctx.globalAlpha=0.28;
+    ctx.drawImage(bgImg,0,0,W,H);
+    ctx.globalAlpha=1;
+  }
+  ctx.fillStyle="rgba(255,255,255,.15)";
+  ctx.fillRect(0,0,W,H);
+}
 
-    // 픽셀 정렬
-    const X = Math.floor(x / PX) * PX;
-    const Y = Math.floor(y / PX) * PX;
+function drawGlobe(){
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(globe.x,globe.y,globe.r,0,Math.PI*2);
+  ctx.clip();
 
-    ctx.fillStyle = C.snow;
+  drawBackground();
 
-    if(type === 0){
-      // 다이아(큰 결정)
-      for(let i=0;i<s;i++){
-        ctx.fillRect(X + i*PX, Y + (s-i)*PX, PX, PX);
-        ctx.fil
+  const glow = ctx.createRadialGradient(globe.x,globe.y-80,20,globe.x,globe.y,globe.r);
+  glow.addColorStop(0,"rgba(255,245,220,.55)");
+  glow.addColorStop(1,"rgba(255,255,255,0)");
+  ctx.fillStyle=glow;
+  ctx.fillRect(0,0,W,H);
+
+  flakes.forEach(f=>{ f.update(); f.draw(); });
+  ctx.restore();
+
+  ctx.strokeStyle="rgba(255,255,255,.35)";
+  ctx.lineWidth=6;
+  ctx.beginPath();
+  ctx.arc(globe.x,globe.y,globe.r,0,Math.PI*2);
+  ctx.stroke();
+}
+
+(function loop(){
+  ctx.clearRect(0,0,W,H);
+  drawGlobe();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
