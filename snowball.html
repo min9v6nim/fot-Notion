@@ -1,220 +1,191 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pixel Snowglobe Widget</title>
+<meta charset="UTF-8">
+<title>Pastel Snowball Widget</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
-  html, body { margin:0; background: transparent; }
-  body { height:100vh; display:flex; align-items:center; justify-content:center; }
+html, body {
+  margin: 0;
+  background: transparent;
+}
 
-  /* 전체 위젯 */
-  .widget {
-    width: 480px;
-    height: 320px;
-    padding: 14px;
-    box-sizing: border-box;
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-    background: linear-gradient(135deg, #ffd6e8, #fff2b8, #d7ecff, #eadcff);
-    box-shadow:
-      inset 0 0 0 6px rgba(255,255,255,0.9),
-      inset 0 0 0 14px rgba(255,255,255,0.45),
-      0 12px 0 rgba(203,188,246,1),
-      0 18px 28px rgba(180,150,255,0.35);
-    image-rendering: pixelated;
-  }
+/* 전체 위젯 */
+.widget {
+  width: 360px;
+  height: 360px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  /* 스노우볼 유리 */
-  .globe {
-    position: relative;
-    width: 100%;
-    height: 240px;
-    border-radius: 16px;
-    overflow: hidden;
+/* 🔮 스노우볼 */
+.snowball {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  overflow: hidden;
 
-    background: radial-gradient(circle at 35% 25%,
-      rgba(255,255,255,0.85),
-      rgba(225,245,255,0.65) 35%,
-      rgba(205,235,255,0.55) 70%,
-      rgba(195,225,255,0.45)
-    );
-
-    box-shadow:
-      inset 0 0 0 4px rgba(255,255,255,0.7),
-      inset 0 -18px 40px rgba(160,180,255,0.18);
-  }
-
-  /* 유리 하이라이트 */
-  .globe::before{
-    content:"";
-    position:absolute;
-    inset:-20px;
-    background:
-      radial-gradient(circle at 30% 15%, rgba(255,255,255,0.65), rgba(255,255,255,0) 40%),
-      radial-gradient(circle at 75% 25%, rgba(255,255,255,0.25), rgba(255,255,255,0) 45%);
-    pointer-events:none;
-  }
-
-  /* 바닥 눈 더미 */
-  .snowBase {
-    position:absolute;
-    left:0; right:0; bottom:-10px;
-    height: 70px;
-    background: radial-gradient(circle at 50% 0%,
+  /* 유리 외곽 */
+  background:
+    radial-gradient(circle at 30% 25%,
       rgba(255,255,255,0.95),
-      rgba(255,255,255,0.75) 55%,
-      rgba(235,245,255,0.55)
+      rgba(255,255,255,0.55) 30%,
+      rgba(255,255,255,0.25) 55%,
+      rgba(255,255,255,0.15)
     );
-    filter: blur(0.2px);
-  }
 
-  /* 픽셀 눈송이(큰 사이즈) */
-  .flake {
-    position:absolute;
-    width: 12px;   /* 크게 */
-    height: 12px;  /* 크게 */
-    image-rendering: pixelated;
-    opacity: 0.95;
-    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.35));
-    will-change: transform;
-  }
+  box-shadow:
+    inset 0 0 0 8px rgba(255,255,255,0.65),
+    inset 0 0 24px rgba(255,255,255,0.45),
+    0 20px 40px rgba(180,150,255,0.45);
+}
 
-  /* 12x12 픽셀 눈송이 모양 (box-shadow로 픽셀 찍기) */
-  .flake::before{
-    content:"";
-    position:absolute;
-    width: 2px; height: 2px;
-    background: rgba(255,255,255,0.95);
-    /* 중심 기준 픽셀 패턴 */
-    box-shadow:
-      4px 0 rgba(255,255,255,0.95),
-      -4px 0 rgba(255,255,255,0.95),
-      0 4px rgba(255,255,255,0.95),
-      0 -4px rgba(255,255,255,0.95),
+/* 유리 하이라이트 */
+.snowball::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background:
+    radial-gradient(circle at 28% 20%,
+      rgba(255,255,255,0.9),
+      rgba(255,255,255,0) 38%),
+    radial-gradient(circle at 70% 30%,
+      rgba(255,255,255,0.35),
+      rgba(255,255,255,0) 45%);
+  pointer-events: none;
+}
 
-      2px 2px rgba(255,255,255,0.9),
-      -2px 2px rgba(255,255,255,0.9),
-      2px -2px rgba(255,255,255,0.9),
-      -2px -2px rgba(255,255,255,0.9),
+/* 내부 배경 */
+.inner {
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: linear-gradient(
+    to bottom,
+    #f7c1de,
+    #d8c7ff,
+    #c6ddff
+  );
+  overflow: hidden;
+}
 
-      6px 2px rgba(255,255,255,0.75),
-      -6px 2px rgba(255,255,255,0.75),
-      6px -2px rgba(255,255,255,0.75),
-      -6px -2px rgba(255,255,255,0.75),
+/* 바닥 눈 */
+.inner::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(255,255,255,0.95),
+    rgba(255,255,255,0.75),
+    rgba(255,255,255,0.55)
+  );
+}
 
-      2px 6px rgba(255,255,255,0.75),
-      -2px 6px rgba(255,255,255,0.75),
-      2px -6px rgba(255,255,255,0.75),
-      -2px -6px rgba(255,255,255,0.75);
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-  }
+/* ❄️ 픽셀 눈송이 */
+.flake {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+  opacity: 0.95;
+}
 
-  /* 라벨 */
-  .label {
-    margin-top: 10px;
-    text-align: center;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
-    color: #6b5c88;
-    letter-spacing: 0.2px;
-  }
+.flake::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    4px 0 #fff,
+    -4px 0 #fff,
+    0 4px #fff,
+    0 -4px #fff,
+    2px 2px #fff,
+    -2px 2px #fff,
+    2px -2px #fff,
+    -2px -2px #fff;
+}
 </style>
 </head>
 
 <body>
-  <div class="widget">
-    <div class="globe" id="globe">
-      <div class="snowBase"></div>
-    </div>
-    <div class="label">Welcome My Notion Home</div>
+
+<div class="widget">
+  <div class="snowball" id="snowball">
+    <div class="inner" id="inner"></div>
   </div>
+</div>
 
 <script>
-  const globe = document.getElementById("globe");
+const inner = document.getElementById("inner");
+const W = () => inner.clientWidth;
+const H = () => inner.clientHeight;
 
-  const W = () => globe.clientWidth;
-  const H = () => globe.clientHeight;
+const FLAKES = 34;
+const flakes = [];
 
-  // 눈송이 크게 + 적당히 풍성하게
-  const FLAKE_COUNT = 38;
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
 
-  const flakes = [];
+function createFlake() {
+  const el = document.createElement("div");
+  el.className = "flake";
+  inner.appendChild(el);
 
-  function rand(min, max){ return Math.random() * (max - min) + min; }
+  return {
+    el,
+    x: rand(0, W()),
+    y: rand(-H(), H()),
+    vy: rand(0.4, 0.9),
+    vx: rand(-0.25, 0.25),
+    drift: rand(0.6, 1.4),
+    phase: rand(0, Math.PI * 2)
+  };
+}
 
-  function makeFlake() {
-    const el = document.createElement("div");
-    el.className = "flake";
+for (let i = 0; i < FLAKES; i++) flakes.push(createFlake());
 
-    // 큰 눈송이지만 약간 크기 랜덤 (더 자연스럽게)
-    const scale = rand(1.0, 1.45);
-    el.style.transform = `scale(${scale})`;
+let t = 0;
+function animate() {
+  t += 0.016;
 
-    const f = {
-      el,
-      x: rand(0, W()),
-      y: rand(-H(), H()),
-      vy: rand(0.45, 1.05),     // 천천히 내리게
-      vx: rand(-0.18, 0.18),    // 좌우 흔들림
-      drift: rand(0.6, 1.4),    // 흔들림 강도
-      phase: rand(0, Math.PI*2),
-      rot: rand(-0.6, 0.6),
-      baseScale: scale
-    };
+  for (const f of flakes) {
+    f.y += f.vy;
+    f.x += f.vx + Math.sin(t * f.drift + f.phase) * 0.4;
 
-    el.style.left = f.x + "px";
-    el.style.top = f.y + "px";
-
-    globe.appendChild(el);
-    flakes.push(f);
-  }
-
-  for (let i = 0; i < FLAKE_COUNT; i++) makeFlake();
-
-  let t = 0;
-  function tick() {
-    t += 0.016; // ~60fps 기준 시간감
-
-    const width = W();
-    const height = H();
-
-    for (const f of flakes) {
-      // 아래로 낙하 + 살짝 좌우로 흔들
-      f.y += f.vy;
-      f.x += f.vx + Math.sin(t * f.drift + f.phase) * 0.35;
-
-      // 바닥에 가까워지면 살짝 느려지는 느낌(눈 더미 쌓임 연출)
-      const nearBase = f.y > height - 80;
-      const slow = nearBase ? 0.6 : 1.0;
-      f.y += f.vy * (slow - 1); // 미세 감속
-
-      // 화면 밖 나가면 위로 리셋
-      if (f.y > height + 8) {
-        f.y = rand(-40, -10);
-        f.x = rand(0, width);
-        f.vy = rand(0.45, 1.05);
-        f.vx = rand(-0.18, 0.18);
-        f.drift = rand(0.6, 1.4);
-        f.phase = rand(0, Math.PI*2);
-        f.rot = rand(-0.6, 0.6);
-        const scale = rand(1.0, 1.45);
-        f.baseScale = scale;
-      }
-
-      // 스노우볼 느낌: 아주 약한 회전감
-      const rot = Math.sin(t + f.phase) * 6 * f.rot;
-
-      f.el.style.left = f.x + "px";
-      f.el.style.top = f.y + "px";
-      f.el.style.transform = `rotate(${rot}deg) scale(${f.baseScale})`;
+    if (f.y > H()) {
+      f.y = rand(-20, -5);
+      f.x = rand(0, W());
     }
 
-    requestAnimationFrame(tick);
+    f.el.style.transform =
+      `translate(${f.x}px, ${f.y}px)`;
   }
-  tick();
+
+  requestAnimationFrame(animate);
+}
+animate();
 </script>
+
 </body>
 </html>
