@@ -1,6 +1,6 @@
 // ===== Notion API 설정 =====
-const NOTION_TOKEN = "secret_여기에_네_토큰";
-const DATABASE_ID = "여기에_네_캘린더_DB_ID";
+const NOTION_TOKEN = "ntn_K91404737828xV5w5clbsiiyeP2aXgLprHjEhLFnDwR07Y";
+const DATABASE_ID = "2d5220d08fb6802c864cdb1846ee9411?v=2d5220d08fb68048a619000cd5a0b4f2";
 
 const grid = document.getElementById("grid");
 const title = document.getElementById("monthTitle");
@@ -107,3 +107,22 @@ document.getElementById("todayBtn").onclick=()=>{
 };
 
 render();
+
+// ===== Notion 캘린더 불러오기 =====
+async function notion캘린더불러오기() {
+  const 응답 = await fetch(
+    `https://api.notion.com/v1/databases/${DATABASE_ID}/query`,
+    {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${NOTION_TOKEN}`,
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+  const 데이터 = await 응답.json();
+  return 데이터.results;
+}
+
