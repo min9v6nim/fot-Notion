@@ -1,3 +1,7 @@
+// ===== Notion API 설정 =====
+const NOTION_TOKEN = "secret_여기에_네_토큰";
+const DATABASE_ID = "여기에_네_캘린더_DB_ID";
+
 const grid = document.getElementById("grid");
 const title = document.getElementById("monthTitle");
 
