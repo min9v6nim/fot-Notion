@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MP3 Snowglobe Widget</title>
+
+  <!-- Pixel Font (링크 예제와 같은 계열) -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      /* 파스텔/픽셀 톤 */
+      --bg1:#f7d7ee;
+      --bg2:#d8eaff;
+      --frame1:#f3c8de;
+      --frame2:#d8a6c4;
+      --screen:#dff1ff;
+      --ink:#2b2b2b;
+      --white:#ffffff;
+      --glow:#fff2c9;
+      --glow2:#ffd6ee;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background:transparent;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* 전체 MP3 위젯 */
+    .mp3Widget{
+      width: 360px;
+      border-radius: 16px;
+      padding: 14px;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+      box-shadow:
+        0 18px 40px rgba(0,0,0,.18),
+        inset 0 0 0 4px rgba(255,255,255,.35);
+      position: relative;
+      font-family: "Press Start 2P", system-ui, sans-serif;
+      color: var(--ink);
+      user-select:none;
+    }
+
+    /* 픽셀 느낌 외곽선 */
+    .pixelFrame{
+      background: linear-gradient(180deg, var(--frame1), var(--frame2));
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow:
+        inset 0 0 0 4px rgba(255,255,255,.35),
+        inset 0 -6px 0 rgba(0,0,0,.06);
+      position: relative;
+    }
+
+    /* 상단 바 */
+    .topBar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 6px 8px 10px 8px;
+    }
+
+    .led{
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: #a8ffcf;
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,.4),
+        0 0 16px rgba(168,255,207,.85);
+    }
+
+    .title{
+      font-size: 12px;
+      letter-spacing: 1px;
+      opacity: .9;
+    }
+
+    /* 스크린 */
+    .screen{
+      background: var(--screen);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow:
+        inset 0 0 0 4px rgba(255,255,255,.55),
+        inset 0 -8px 0 rgba(0,0,0,.04);
+    }
+
+    canvas{
+      display:block;
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+      border-radius: 8px;
+    }
+
+    /* 하단 컨트롤 영역 */
+    .controls{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      padding: 12px 8px 4px 8px;
+      gap: 10px;
+    }
+
+    .btn{
+      flex: 1;
+      text-align:center;
+      padding: 10px 8px;
+      background: rgba(255,255,255,.35);
+      border-radius: 10px;
+      box-shadow:
+        inset 0 0 0 3px rgba(255,255,255,.45),
+        inset 0 -6px 0 rgba(0,0,0,.06);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .btn.play{
+      flex: 1.2;
+      background: rgba(255,255,255,.50);
+    }
+
+    /* 하단 MP3 베이스 텍스트 (요청: My Notion Home 픽셀 문구) */
+    .brand{
+      margin-top: 10px;
+      padding: 10px 8px;
+      background: rgba(255,255,255,.25);
+      border-radius: 12px;
+      text-align:center;
+      box-shadow:
+        inset 0 0 0 3px rgba(255,255,255,.35),
+        inset 0 -6px 0 rgba(0,0,0,.05);
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: rgba(43,43,43,.85);
+    }
+
+    /* Notion embed 시 크기 대응 */
+    @media (max-width: 420px){
+      .mp3Widget{ width: 92vw; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="mp3Widget">
+    <div class="pixelFrame">
+
+      <div class="topBar">
+        <div class="led"></div>
+        <div class="title">SNOWGLOBE</div>
+      </div>
+
+      <div class="screen">
+        <canvas id="scene" width="320" height="320"></canvas>
+      </div>
+
+      <div class="controls">
+        <div class="btn">◁◁</div>
+        <div class="btn play">▶</div>
+        <div class="btn">▷▷</div>
+      </div>
+
+      <div class="brand">MY NOTION HOME</div>
+
+    </div>
+  </div>
+
+<script>
+  const canvas = document.getElementById("scene");
+  const ctx = canvas.getContext("2d");
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  // 픽셀 스케일 (값 올리면 더 레트로/블록감)
+  const PX = 2;
+
+  // 스노우볼(원) 위치/반지름
+  const globe = { x: W/2, y: 150, r: 118 };
+
+  // 파스텔/조명 톤
+  const C = {
+    skyTop:  "#f7d7ee",
+    skyMid:  "#e7dfff",
+    skyBot:  "#d8eaff",
+    glass:   "rgba(255,255,255,0.22)",
+    rim:     "rgba(255,255,255,0.38)",
+    glow1:   "rgba(255,242,201,0.75)",
+    glow2:   "rgba(255,214,238,0.45)",
+    snow:    "rgba(255,255,255,0.95)",
+    snowDim: "rgba(255,255,255,0.70)"
+  };
+
+  // 큰 픽셀 눈결정(여러 형태)
+  function drawCrystal(x,y,size,type,alpha=1){
+    const s = Math.max(2, Math.floor(size));
+    ctx.globalAlpha = alpha;
+
+    // 픽셀 정렬
+    const X = Math.floor(x / PX) * PX;
+    const Y = Math.floor(y / PX) * PX;
+
+    ctx.fillStyle = C.snow;
+
+    if(type === 0){
+      // 다이아(큰 결정)
+      for(let i=0;i<s;i++){
+        ctx.fillRect(X + i*PX, Y + (s-i)*PX, PX, PX);
+        ctx.fil
