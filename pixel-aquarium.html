@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pastel Aquarium Widget</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+  margin: 0;
+  background: transparent;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* 🧱 외부 박스 */
+.box {
+  width: 460px;
+  height: 280px;
+  padding: 16px;
+  box-sizing: border-box;
+  background: linear-gradient(
+    135deg,
+    #ffd1e8,
+    #fff3b0,
+    #d8ecff,
+    #eadcff
+  );
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 0 6px rgba(255,255,255,0.9),
+    inset 0 0 0 14px rgba(255,255,255,0.45),
+    0 14px 30px rgba(180,150,255,0.45);
+}
+
+/* 💧 수족관 */
+.aquarium {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(
+    to bottom,
+    #eef9ff,
+    #dff3ff,
+    #eafcff
+  );
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* 🌊 물결 쉐이더 */
+.aquarium::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      120deg,
+      rgba(255,255,255,0.08) 0px,
+      rgba(255,255,255,0.08) 4px,
+      rgba(255,255,255,0) 8px
+    );
+  animation: wave 6s linear infinite;
+}
+
+@keyframes wave {
+  from { background-position: 0 0; }
+  to { background-position: 120px 60px; }
+}
+
+/* 🐠 물고기 */
+.fish {
+  position: absolute;
+  width: 70px;
+  height: 36px;
+  border-radius: 50% 45% 45% 50%;
+  animation: swim linear infinite;
+}
+
+.fish::after {
+  content: "";
+  position: absolute;
+  right: -24px;
+  top: 6px;
+  width: 28px;
+  height: 22px;
+  background: inherit;
+  border-radius: 50%;
+  transform-origin: left center;
+  animation: tail 0.6s ease-in-out infinite;
+}
+
+@keyframes swim {
+  from { transform: translateX(-90px); }
+  to   { transform: translateX(520px); }
+}
+
+@keyframes tail {
+  0% { transform: rotate(20deg); }
+  50% { transform: rotate(-20deg); }
+  100% { transform: rotate(20deg); }
+}
+
+/* ✨ 반짝이 픽셀 */
+.sparkle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: rgba(255,255,255,0.85);
+  animation: float 4s infinite ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateY(-160px); opacity: 0; }
+}
+
+/* 📝 문구 */
+.label {
+  margin-top: 10px;
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  color: #6b5c88;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <div class="aquarium" id="aquarium"></div>
+  <div class="label">Welcome My Notion Home</div>
+</div>
+
+<script>
+const aquarium = document.getElementById("aquarium");
+
+const fishColors = [
+  ["#ffb3e6", "#ffd6f2"],
+  ["#bde7ff", "#e0f4ff"],
+  ["#fff1a8", "#ffe4b5"],
+  ["#d7c8ff", "#f0e9ff"],
+  ["#ffcab0", "#ffe0d6"]
+];
+
+function createFish() {
+  const fish = document.createElement("div");
+  fish.className = "fish";
+
+  const color = fishColors[Math.floor(Math.random() * fishColors.length)];
+  fish.style.background = `linear-gradient(135deg, ${color[0]}, ${color[1]})`;
+
+  fish.style.top = Math.random() * 140 + "px";
+  fish.style.animationDuration = (10 + Math.random() * 8) + "s";
+
+  aquarium.appendChild(fish);
+}
+
+// 물고기 여러 마리
+for (let i = 0; i < 5; i++) createFish();
+
+// 반짝이 입자
+for (let i = 0; i < 18; i++) {
+  const s = document.createElement("div");
+  s.className = "sparkle";
+  s.style.left = Math.random() * 100 + "%";
+  s.style.bottom = "0";
+  s.style.animationDelay = Math.random() * 4 + "s";
+  aquarium.appendChild(s);
+}
+</script>
+
+</body>
+</html>
