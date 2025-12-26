@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quote Slider Widget</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .widget {
+    width: 320px;
+    height: 120px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 200, 230, 0.85),
+      rgba(210, 220, 255, 0.85)
+    );
+    border-radius: 20px;
+    box-shadow:
+      0 0 20px rgba(255, 200, 255, 0.4),
+      inset 0 0 12px rgba(255,255,255,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .quote {
+    position: absolute;
+    opacity: 0;
+    text-align: center;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4a3f55;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .quote.active {
+    opacity: 1;
+  }
+
+  /* 몽글한 반짝이 효과 */
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    animation: float 4s infinite ease-in-out;
+  }
+
+  .sparkle:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
+  .sparkle:nth-child(2) { top: 70%; left: 75%; animation-delay: 1s; }
+  .sparkle:nth-child(3) { top: 40%; left: 50%; animation-delay: 2s; }
+
+  @keyframes float {
+    0%   { transform: translateY(0); opacity: 0.6; }
+    50%  { transform: translateY(-8px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 0.6; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="widget">
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+
+  <div class="quote active">큰 희망이 큰 사람을 만든다.</div>
+  <div class="quote">지금이 제일 비참하다고 할 수 있는 동안은 아직 제일 비참한 게 아니다.</div>
+  <div class="quote">희망을 품지 않은 자는 절망도 할 수 없다.</div>
+  <div class="quote">자존심은 가장 고귀한 인격을 망친다.</div>
+  <div class="quote">자신의 능력을 숨길 수 있는 것은 대단한 능력이다.</div>
+</div>
+
+<script>
+  const quotes = document.querySelectorAll('.quote');
+  let index = 0;
+
+  setInterval(() => {
+    quotes[index].classList.remove('active');
+    index = (index + 1) % quotes.length;
+    quotes[index].classList.add('active');
+  }, 3000);
+</script>
+
+</body>
+</html>
